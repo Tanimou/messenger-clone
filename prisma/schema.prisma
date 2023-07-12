@@ -37,13 +37,13 @@ model Account{
   provider String
   type String
   providerAccountId String
-  accessToken String? @db.String
-  refreshToken String? @db.String
-  accessTokenExpires Int?
-  tokenType String?
+  access_token String? @db.String
+  refresh_token String? @db.String
+  expires_at Int?
+  token_type String?
   scope String?
-  sessionState String?
-  idToken String?
+  session_state String?
+  id_token String?
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])

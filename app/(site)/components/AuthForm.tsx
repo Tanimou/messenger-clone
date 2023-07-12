@@ -3,9 +3,12 @@
 import Button from "@/app/components/Button"
 import Input from "@/app/components/input/Input"
 import { useCallback, useState } from "react"
-import { useForm, FieldValues, SubmitHandler } from "react-hook-form"
+import { useForm, FieldValues, SubmitHandler, set } from "react-hook-form"
 import AuthSocialButton from "./AuthSocialButton"
 import {BsGithub,BsGoogle} from 'react-icons/bs'
+import axios from "axios"
+import { toast } from "react-hot-toast"
+import { signIn } from "next-auth/react"
 
 type Variant = 'signin' | 'signup'
 const AuthForm = () => {
@@ -26,11 +29,43 @@ const AuthForm = () => {
 
     const onSubmit: SubmitHandler<FieldValues> = (data) => {
         setIsLoading(true)
-        variant === 'signin' ? console.log('signin', data) : console.log('signup', data)
+        if (variant === 'signup') {
+            //NextAuth Sign in
+            axios.post('/api/auth/signup', data)
+                .catch(() => toast.error('Something went wrong'))
+                .finally(() => setIsLoading(false))
+        }
+        else {
+            signIn('credentials', {
+                ...data,
+                redirect: false
+            }).then((callback) => {
+                if (callback?.error) {
+                    toast.error("Invalid credentials")
+                }
+                else {
+                    toast.success('Signed in successfully')
+                }
+            }).catch(() => toast.error('Something went wrong'))
+                .finally(() => setIsLoading(false))
+        }
+    
     }
 
     const socialAction = (action: string) => {
         //NextAuth Social Sign in
+        setIsLoading(true)
+        signIn(action, {
+            redirect: false
+        }).then((callback) => {
+            if (callback?.error) {
+                toast.error("Invalid credentials")
+            }
+            else {
+                toast.success('Signed in successfully')
+            }
+        }).catch(() => toast.error('Something went wrong'))
+            .finally(() => setIsLoading(false))
     }
     return (
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">

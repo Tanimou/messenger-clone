@@ -2,16 +2,19 @@
 
 import Button from "@/app/components/Button"
 import Input from "@/app/components/input/Input"
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useForm, FieldValues, SubmitHandler, set } from "react-hook-form"
 import AuthSocialButton from "./AuthSocialButton"
 import {BsGithub,BsGoogle} from 'react-icons/bs'
 import axios from "axios"
 import { toast } from "react-hot-toast"
-import { signIn } from "next-auth/react"
+import { signIn, useSession } from "next-auth/react"
+import { useRouter} from "next/navigation"
 
 type Variant = 'signin' | 'signup'
 const AuthForm = () => {
+    const session = useSession()
+    const router = useRouter()
     const [variant, setVariant] = useState<Variant>('signin')
     const [isLoading, setIsLoading] = useState(false)
 
@@ -19,6 +22,12 @@ const AuthForm = () => {
         setVariant(variant === 'signin' ? 'signup' : 'signin')
     }, [variant])
 
+    useEffect(() => {
+        if (session?.status === "authenticated") {
+            router.push('/users')
+        }
+    }, [session,router])
+    
     const { register, handleSubmit, formState: { errors } } = useForm<FieldValues>({
         defaultValues: {
             email: '',
@@ -32,6 +41,7 @@ const AuthForm = () => {
         if (variant === 'signup') {
             //NextAuth Sign in
             axios.post('/api/auth/signup', data)
+                .then(()=>signIn('credentials',data))
                 .catch(() => toast.error('Something went wrong'))
                 .finally(() => setIsLoading(false))
         }
@@ -45,6 +55,7 @@ const AuthForm = () => {
                 }
                 else {
                     toast.success('Signed in successfully')
+                    router.push('/users')
                 }
             }).catch(() => toast.error('Something went wrong'))
                 .finally(() => setIsLoading(false))

@@ -52,9 +52,7 @@ const ConversationBox: FC<ConversationBoxProps> = ({ data, selected }) => {
     }, [lastMessage, userEmail])
 
     const lastMessageText = useMemo(() => {
-        if (!lastMessage) {
-            return null
-        }
+    
         
         if (lastMessage?.image) {
             return 'Sent an image'
@@ -72,7 +70,8 @@ const ConversationBox: FC<ConversationBoxProps> = ({ data, selected }) => {
             className={clsx(`w-full relative flex items-center space-x-3 p-3 hover:bg-neutral-100 rounded-lg transition cursor-pointer`,selected ? 'bg-neutral-100' : 'bg-white')}
         >
             {data.isGroup ? (
-                <AvatarGroup users={data.users} />
+                // <AvatarGroup users={data.users} />
+                <Avatar user={otherUser} />
             ) : (
                 <Avatar user={otherUser} />
             )}

@@ -28,7 +28,7 @@ const ConfirmModal: FC<ConfirmModalProps> = ({ isOpen, onClose }) => {
             router.push('/conversations')
             router.refresh()
         })
-            .catch(() => toast.error('Failed'))
+            .catch(() => toast.error('Failed to delete conversation. Please try again.'))
             .finally(() => setIsLoading(false))
     }, [conversationId,router,onClose])
     return (

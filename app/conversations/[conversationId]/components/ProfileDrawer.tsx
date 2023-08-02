@@ -19,7 +19,7 @@ interface ProfileDrawerProps {
 
 const ProfileDrawer: FC<ProfileDrawerProps> = ({ isOpen, data, onClose }) => {
     const otherUser = useOtherUser(data)
-    const [isModalOpen, setIsModalOpen] = useState(false)
+    const [isConfirmOpen, setIsConfirmOpen] = useState(false)
     const joinedDate = useMemo(() => {
         return format(new Date(otherUser.createdAt), 'PP')
     }, [otherUser.createdAt])
@@ -36,7 +36,7 @@ const ProfileDrawer: FC<ProfileDrawerProps> = ({ isOpen, data, onClose }) => {
     }, [data])
     return (
         <>
-            <ConfirmModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}/>
+            <ConfirmModal isOpen={isConfirmOpen} onClose={() => setIsConfirmOpen(false)}/>
             
             
             <Transition.Root show={isOpen} as={Fragment}>
@@ -86,7 +86,7 @@ const ProfileDrawer: FC<ProfileDrawerProps> = ({ isOpen, data, onClose }) => {
                                                         {statusText}
                                                     </div>
                                                     <div className='flex gap-10 my-8'>
-                                                        <div className='flex flex-col gap-3 items-center cursor-pointer hover:opacity-75' onClick={() => setIsModalOpen(true)}>
+                                                        <div className='flex flex-col gap-3 items-center cursor-pointer hover:opacity-75' onClick={() => setIsConfirmOpen(true)}>
                                                             <div className='w-10 h-10 bg-neutral-100 rounded-full flex items-center justify-center'>
                                                                 <IoTrash size={20} />
                                                             </div>

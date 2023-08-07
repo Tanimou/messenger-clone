@@ -1,6 +1,6 @@
 "use client"
 
-import { FullConversationType } from '@/app/types'
+import { FullConversationType, FullMessageType } from '@/app/types'
 import { FC, useCallback, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { Conversation, Message, User } from '@prisma/client'
@@ -14,6 +14,7 @@ import AvatarGroup from '@/app/components/AvatarGroup'
 interface ConversationBoxProps {
     data: FullConversationType
     selected?: boolean
+    
 
 }
 
@@ -21,13 +22,14 @@ const ConversationBox: FC<ConversationBoxProps> = ({ data, selected }) => {
     const otherUser = useOtherUser(data)
     const router = useRouter()
     const session = useSession()
+    const isMe = session?.data?.user?.email === (data.messages.length > 0 ? data.messages[data.messages.length - 1].sender?.email : undefined);
 
     const handleClick = useCallback(() => {
         router.push(`/conversations/${data.id}`)
     }, [data, router])
 
     const lastMessage = useMemo(() => {
-        const lastMessage = data.messages[data.messages.length - 1]
+        const lastMessage = data.messages[data.messages?.length - 1]
         if (!lastMessage) {
             return null
         }
@@ -89,9 +91,16 @@ const ConversationBox: FC<ConversationBoxProps> = ({ data, selected }) => {
                             </p>
                         )}
                     </div>
-                    <p className={clsx(`truncate text-sm`,hasSeen ? 'text-gray-500' : 'text-black font-medium')}>
-                        {lastMessageText}
-                    </p>
+                    {isMe ? (
+                        <p className={clsx(`truncate text-sm`, hasSeen ? 'text-gray-500' : 'text-black font-medium')}>
+                            You: {lastMessageText}
+                        </p>
+                    ) : (
+                        <p className={clsx(`truncate text-sm`, hasSeen ? 'text-gray-500' : 'text-black font-medium')}>
+                            {lastMessageText}
+                        </p>
+                    )}
+                    
                 </div>
             </div>
         </div>

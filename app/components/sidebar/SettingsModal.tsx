@@ -82,7 +82,7 @@ const SettingsModal: FC<SettingsModalProps> = ({ currentUser, isOpen, onClose })
                                         alt="Avatar"
                                     />
                                     <CldUploadButton options={{ maxFiles: 1 }} onUpload={handleUpload} uploadPreset="t4jbbnat">
-                                        <Button disabled={isLoading} secondary type="button">
+                                        <Button disabled={isLoading} type="button">
                                             Change
                                         </Button>
                                     </CldUploadButton>
@@ -93,7 +93,7 @@ const SettingsModal: FC<SettingsModalProps> = ({ currentUser, isOpen, onClose })
                 </div>
 
                 <div className="mt-6 flex items-center justify-end gap-x-6">
-                    <Button disabled={isLoading} secondary onClick={onClose}>
+                    <Button disabled={isLoading} onClick={onClose}>
                         Cancel
                     </Button>
                     <Button disabled={isLoading} type="submit">
